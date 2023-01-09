@@ -1,0 +1,63 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src={% static 'img/logo.png' %} width="50" height="50" class="d-inline-block align-top" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+    </button>
+      <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+        <ul class="navbar-nav">
+          {% for menu_item in menu.items.all|dictsort:"seq_num" %}
+            {% if menu_item.subitems.all %}
+              <li class="nav-item dropdown">
+                <div class="btn-group">
+                  <button class="btn btn-dark" onclick="window.location.href='{{ menu_item.link }}'"aria-expanded="false">
+                    {{ menu_item.item_name }}
+                  </button>
+                  <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                      {% for subitem in menu_item.subitems.all|dictsort:"seq_num" %}
+                        {% if subitem.subsubitems.all %}
+                          <li class="dropend d-grid">
+                            <div class="btn-group">
+                              <a class="dropdown-item" role="button" href="{{ subitem.link }}">{{ subitem.subitem_name }}</a>
+                              <a class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" role="button" href=""></a>
+                                {% for subsubitem in subitem.subsubitems.all|dictsort:"seq_num" %}
+                                  <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li>
+                                      <a class="dropdown-item" href="{{ subsubitem.link }}">{{ subsubitem.subsubitem_name }}</a>
+                                    </li>
+                                  </ul>
+                                {% endfor %}
+                            </div>
+                          </li>
+                        {% else %}
+                          <li class="d-grid">
+                            <div class="btn-group">
+                              <a class="dropdown-item" role="button" href="#">
+                                {{ subitem.subitem_name }}
+                              </a>
+                            </div>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                </div>
+              </li>
+           {% else %}
+             <li class="nav-item dropdown">
+              <div class="btn-group">
+                <button class="btn btn-dark" onclick="window.location.href='#'"aria-expanded="false">
+                  {{ menu_item.item_name }}
+                </button>
+             </li>
+           {% endif %}   
+          {% endfor %}
+        </ul>
+      </div>
+  </div>
+</nav>
